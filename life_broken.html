@@ -8,7 +8,7 @@ var ysize = 10;
 var dead = 0;
 var alive = 1;
 
-function Neighbors(Board, x, y)
+function Neighbors(a_board, x, y)
 {
     // We want to count the ALIVE neighbors first
     var alive_neighbors = 0;
@@ -27,10 +27,13 @@ function Neighbors(Board, x, y)
     // What is dx? change in x
     // For the second condition, we need to say that dx should be less than or equal to, not just less than
 	for(dx=-1;dx <= 1; ++dx)
-		for(dy=-1;dy <= 1; ++dy)
+		for(dy = -1;dy <= 1; ++dy)
 		{
-			var ax = x+dx;
+            var ax = x+dx;
+            console.log('ax is', ax)
             var ay = y+dy;
+            console.log('ay is', ay)
+
             
             // We now need to account for the board wrapping
             // If you're at (0,0), the left neighbor is ((xsize -1), y)
@@ -57,7 +60,7 @@ function Neighbors(Board, x, y)
 
             ++total_neighbors;
             // a neighbor is going to be the changed x and changed y conbinations
-            neighbor = Board[ax][ay];
+            neighbor = a_board[ax][ay];
 
             //Re writing this line to be clear:  if(Board[ax][ay]==alive) ++n;
             if (neighbor == alive) {
@@ -73,29 +76,63 @@ function Neighbors(Board, x, y)
 	return alive_neighbors;
 }
 
-function Kill(Board,x,y)
+function Kill(a_board,x,y)
 {
-	if(Board[x][y] == alive)
-		Board[x][y] = dead;
+    a_board[x][y] = dead;
 }
 
-function MakeLive(Board,x,y)
+function MakeLive(a_board,x,y)
 {
-	if(Board[x][y] == dead)
-		Board[x][y] = alive;
+	a_board[x][y] = alive;
 }
 
-function NextStep(Board)
+function NextStep(a_board)
 {
-	for(var x = 0; x <= xsize; ++x)
-	{
-		for(var y = 0; y <= ysize; ++x)
-		{
-			n = Neighbors(Board,x,y);
-			if(n=3) MakeLive(Board,x,y);
-			if((n<2)||(n>3)) Kill(Board,x,y);
-		}
-	}
+    var new_board = BlankBoard();
+    var total_cells = 0;
+
+	for(var x = 0; x < xsize; ++x) {
+		for(var y = 0; y < ysize; ++y) {
+            ++total_cells;
+            cell_str = x + ' , '+ y;
+            console.log('evaluating cell ', cell_str )
+
+            // Re write this: n = Neighbors(Board,x,y);
+            alive_neighbor_count = Neighbors(a_board, x, y);
+            cell = a_board[x][y];
+
+            // If a dead cell has exactly 3 living neighbors
+            // it becomes alive in the next generation
+            
+            var _msg = cell_str + ' is ';
+            if (cell == dead) {
+                if (alive_neighbor_count == 3) {
+                    _msg += 'DEAD and has ' + alive_neighbor_count + ' alive neighbors ---> making ALIVE';
+                    MakeLive(new_board, x, y);
+                } else {
+                    _msg += 'DEAD and has ' + alive_neighbor_count + ' alive neighbors ---> making DEAD';
+                    Kill(new_board, x, y);
+                }
+            } else {
+                if (cell === alive) {
+                    if (alive_neighbor_count == 2 || alive_neighbor_count == 3) {
+                        _msg += 'ALIVE has ' + alive_neighbor_count + ' alive neighbors --> making ALIVE';
+                        MakeLive(new_board, x, y);
+                    } else {
+                        _msg += 'ALIVE and has ' + alive_neighbor_count + ' alive neighbords ---> making DEAD';
+                        Kill(new_board, x, y);
+                    }
+                }
+            }
+            _msg += '; cell is actually ';
+            _msg += new_board[x][y] === alive ? 'alive' : 'dead';
+            console.log(_msg);
+        }
+    }
+    if (total_cells != xsize * ysize ){
+        throw 'FATAL: expected to check ' + xsize * ysize + ' cells, but only checked ' + total_cells;
+    }
+    Board = new_board;
 }
 
 function DrawBoard(Board)
@@ -110,18 +147,26 @@ function DrawBoard(Board)
 	document.getElementById("board").innerHTML = Text;
 }
 
+// We create a "blank board" to have a place to hold the updates
+function BlankBoard() {
+    var blank = new Array(xsize);
+	for(var x = 0; x < xsize; ++x)
+	{
+		blank[x] = new Array(ysize);
+		for(var y = 0; y < ysize; ++y)
+			blank[x][y] = 0;
+    }
+    return blank
+}
+
+// Everything below is for testing
 function Main()
 {
+
     // *** Change this variable to choose a different baord setup from below
     var BoardSetup = "blinker";
     
-	Board = new Array(xsize);
-	for(var x = 0; x < xsize; ++x)
-	{
-		Board[x] = new Array(ysize);
-		for(var y = 0; y < ysize; ++y)
-			Board[x][y] = 0;
-	}
+    Board = BlankBoard();
 	
 	if(BoardSetup == "blinker")
 	{
