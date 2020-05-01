@@ -10,15 +10,67 @@ var alive = 1;
 
 function Neighbors(Board, x, y)
 {
-	var n = 0
-	for(dx=-1;dx < 1; ++dx)
-		for(dy=-1;dy < 1; ++dy)
+    // We want to count the ALIVE neighbors first
+    var alive_neighbors = 0;
+    var total_neighbors = 0;
+
+    // We want to identify if a neighbor is in range
+        // Check: is the x coordinate less than 0?
+        // Check: is the x coordinate greater than the length (xsize)?
+        // Check: is the y coordinate less than 0?
+        // Check: is the x coordinate greater than the height (ysize)?
+
+    if (x < 0 || x >= xsize || y < 0 || y >= ysize) {
+        throw 'Fatal: ' + x + ', '+ y + ', ' + 'is out of range.';
+    }
+
+    // What is dx? change in x
+    // For the second condition, we need to say that dx should be less than or equal to, not just less than
+	for(dx=-1;dx <= 1; ++dx)
+		for(dy=-1;dy <= 1; ++dy)
 		{
 			var ax = x+dx;
-    		var ay = y+dy;
-    		if(Board[ax][ay]==alive) ++n;
-		}
-	return n;
+            var ay = y+dy;
+            
+            // We now need to account for the board wrapping
+            // If you're at (0,0), the left neighbor is ((xsize -1), y)
+            if (ax < 0) {
+                ax = (xsize - 1);
+            }
+
+            // If you're at (0, 0), the top neighbor is (x, (ysize -1))
+            if (ay < 0) {
+                ay = (ysize - 1);
+            }
+
+            // If you're all the way at the left side of the board, the next neighbor is 0 because you restart at 0
+            if (ax >= xsize) {
+                ax = 0;
+            }
+            if (ay >= ysize) {
+                ay = 0;
+            }
+
+            if (ax == x && ay == y) {
+                continue; // You're now looking at the cell under question
+            }
+
+            ++total_neighbors;
+            // a neighbor is going to be the changed x and changed y conbinations
+            neighbor = Board[ax][ay];
+
+            //Re writing this line to be clear:  if(Board[ax][ay]==alive) ++n;
+            if (neighbor == alive) {
+                ++alive_neighbors;
+            } else {
+                console.log(ax, ',', ay, ' is a DEAD neighbor of ', x, ',', y);
+            }
+        }
+    if (total_neighbors != 8) {
+        throw 'Fatal: found ' + total_neighbors + ' neighbors; expected 8';
+    }
+    // Re write this line to be clear: return n;
+	return alive_neighbors;
 }
 
 function Kill(Board,x,y)
