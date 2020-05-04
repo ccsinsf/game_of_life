@@ -76,6 +76,7 @@ function Neighbors(a_board, x, y)
 	return alive_neighbors;
 }
 
+// Need to change what is being passed in
 function Kill(a_board,x,y)
 {
     a_board[x][y] = dead;
@@ -162,12 +163,11 @@ function BlankBoard() {
 // Everything below is for testing
 function Main()
 {
-
     // *** Change this variable to choose a different baord setup from below
     var BoardSetup = "blinker";
-    
+
     Board = BlankBoard();
-	
+
 	if(BoardSetup == "blinker")
 	{
 	    Board[1][0] = 1;
