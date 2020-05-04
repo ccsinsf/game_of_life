@@ -1,6 +1,4 @@
-Below is our standard take-home test to assess a candidate's ability to understand, debug, and fix someone else's (bad) code. (Not that we have bad code here!)
-
-Please send what you have after 90 minutes. (If you're close, feel free to spend another 30 minutes on it.) If you have any questions or get stuck, please email/call me. I'll be standing by.
+In memory of John Conway, creator of The Game of Life, who passed away on Apirl 11. 
 
 Instructions:
 Life is a simple cellular automata program. It has these rules:
@@ -15,6 +13,5 @@ Someone has tried to write a version of the Life program in JavaScript, but hasn
 
 Make it work! All three of the provided BoardSetups (declared in life broken.html) should work according to the rules listed above. To view the boards ("flower", "blinker", and "glider") working correctly, please open each. (*They were provided in a zip file)
 
-Notes:
-- When submitting your response, please name the file(s) like this: 'firstname_lastname_v1.html'. If you submit more than one version, the second filenames should contain 'v2', etc.
+Note:
 - You can compare your code's output to the working solutions and document the areas of your program that are not working correctly.
