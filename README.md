@@ -1,4 +1,4 @@
-In memory of John Conway, creator of The Game of Life, who passed away on Apirl 11. 
+In memory of John Conway, creator of The Game of Life, who passed away on Apirl 11. https://www.economist.com/obituary/2020/04/23/john-conway-died-on-april-11th
 
 Instructions:
 Life is a simple cellular automata program. It has these rules:
